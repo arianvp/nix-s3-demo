@@ -7,4 +7,4 @@ export IFS=' '
 # shellcheck disable=SC2086
 echo "Uploading paths" $OUT_PATHS
 # shellcheck disable=SC2086
-exec nix copy --to "s3://cache20240224120542829900000001" $OUT_PATHS
+exec nix copy --to 's3://cache20240224120542829900000001?region=eu-central-1&secret-key=/tmp/nix-secret-key' $OUT_PATHS

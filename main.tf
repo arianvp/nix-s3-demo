@@ -16,7 +16,7 @@ data "aws_iam_policy_document" "assume_role" {
     }
 
     condition {
-      test     = "StringEquals"
+      test     = "StringLike"
       variable = "token.actions.githubusercontent.com:sub"
       values   = ["repo:arianvp/nix-s3-demo:*"]
     }

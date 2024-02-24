@@ -13,16 +13,16 @@ jobs:
       S3_BUCKET: "nix-s3-demo-1"
     steps:
       - uses: actions/checkout@v4
+      - run: echo "$NIX_PRIVATE_KEY" > /tmp/nix-secret-key
+        env:
+          NIX_PRIVATE_KEY: ${{ secrets.NIX_PRIVATE_KEY }}
       - uses: DeterminateSystems/nix-installer-action@main
-        # with:
-        #  extra-conf:
-        #    post-build-hook = ${{ github.workspace }}/post-build-hook.sh
+        with:
+         extra-conf: | 
+           post-build-hook = ${{ github.workspace }}/post-build-hook.sh
       - uses: arianvp/configure-aws@main
         with:
           role-arn: arn:aws:iam::686862074153:role/write-cache
           region: eu-central-1
       - run: nix run nixpkgs#awscli2 sts get-caller-identity
-      - run: echo "$NIX_PRIVATE_KEY" > /tmp/nix-secret-key
-        env:
-          NIX_PRIVATE_KEY: ${{ secrets.NIX_PRIVATE_KEY }}
-      - run: nix copy --to 's3://cache20240224120542829900000001?region=eu-central-1&secret-key=/tmp/nix-secret-key'
+      - run: nix build --accept-flake-config
