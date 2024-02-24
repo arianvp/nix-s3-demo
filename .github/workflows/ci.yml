@@ -17,15 +17,16 @@ jobs:
         env:
           NIX_PRIVATE_KEY: ${{ secrets.NIX_PRIVATE_KEY }}
       - uses: DeterminateSystems/nix-installer-action@main
-      - uses: arianvp/configure-aws@main
+      - name: Set up AWS Credentials for current user
+        uses: arianvp/configure-aws@main
         with:
           role-arn: arn:aws:iam::686862074153:role/write-cache
           region: eu-central-1
-      - uses: arianvp/configure-aws@main
+      - name: Set up AWS credentials for nix-daemon 
+        uses: arianvp/configure-aws@main
         with:
-          role-arn: arn:aws:iam::686862074153:role/write-cache
+          role-arn: arn:aws:iam::686862074153:role/read-cache
           region: eu-central-1
-          user: root # Make sure that the nix-daemon can access the credentials too
       - run: nix run nixpkgs#awscli2 sts get-caller-identity
       - run: nix build --accept-flake-config
       - run: nix copy --to 's3://cache20240224120542829900000001?region=eu-central-1&secret-key=/tmp/nix-secret-key'
