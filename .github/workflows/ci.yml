@@ -27,6 +27,7 @@ jobs:
         with:
           role-arn: arn:aws:iam::686862074153:role/read-cache
           region: eu-central-1
+          role-session-name: GithubActionsNixDaemon
           user: root
       - run: nix run nixpkgs#awscli2 sts get-caller-identity
       - run: sudo -i nix run nixpkgs#awscli2 sts get-caller-identity
