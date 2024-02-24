@@ -6,7 +6,7 @@
   };
 
   nixConfig = {
-    extra-substituters = [ "s3://cache20240224120542829900000001" ];
+    extra-substituters = [ "s3://cache20240224120542829900000001?region=eu-central-1" ];
     extra-trusted-public-keys = [ "nix-s3-demo-1:ACTpMKf67tNWjV7D3AZLVlVA+Mm7O43fITgGJDM2dX0=" ];
   };
 
