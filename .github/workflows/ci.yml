@@ -28,5 +28,6 @@ jobs:
           role-arn: arn:aws:iam::686862074153:role/read-cache
           region: eu-central-1
       - run: nix run nixpkgs#awscli2 sts get-caller-identity
+      - run: sudo -i nix run nixpkgs#awscli2 sts get-caller-identity
       - run: nix build --accept-flake-config
       - run: nix copy --to 's3://cache20240224120542829900000001?region=eu-central-1&secret-key=/tmp/nix-secret-key'
