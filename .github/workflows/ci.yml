@@ -20,17 +20,17 @@ jobs:
       - name: Set up AWS Credentials for current user
         uses: arianvp/configure-aws-action@main
         with:
-          role-arn: arn:aws:iam::686862074153:role/write-cache
+          role-arn: ${{ vars.WRITE_CACHE_ROLE_ARN }}
           region: eu-central-1
       - name: Set up AWS credentials for nix-daemon 
         uses: arianvp/configure-aws-action@main
         with:
-          role-arn: arn:aws:iam::686862074153:role/read-cache
+          role-arn: ${{ vars.READ_CACHE_ROLE_ARN }}
           region: eu-central-1
           role-session-name: GithubActionsNixDaemon
           user: root
       - run: nix run nixpkgs#awscli2 sts get-caller-identity
       - run: sudo -i nix run nixpkgs#awscli2 sts get-caller-identity
-      - run: nix build --extra-trusted-public-keys '${{ secrets.NIX_PUBLIC_KEY }}' --extra-substituters '${{ vars.CACHE_BUCKET_ARN }}'
+      - run: nix build --extra-trusted-public-keys '${{ secrets.NIX_PUBLIC_KEY }}' --extra-substituters '${{ env.CACHE_BUCKET }}'
       - run: nix sign --key-file  /tmp/nix-secret-key
-      - run: nix copy --to '${{ env.S3_BUCKET }}'
+      - run: nix copy --to '${{ env.CACHE_BUCKET }}'
