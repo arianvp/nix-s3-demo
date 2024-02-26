@@ -29,8 +29,6 @@ jobs:
           region: eu-central-1
           role-session-name: GithubActionsNixDaemon
           user: root
-      - run: nix run nixpkgs#awscli2 sts get-caller-identity
-      - run: sudo -i nix run nixpkgs#awscli2 sts get-caller-identity
       - run: nix build --extra-trusted-public-keys '${{ secrets.NIX_PUBLIC_KEY }}' --extra-substituters '${{ env.CACHE_BUCKET }}'
       - run: nix sign --key-file  /tmp/nix-secret-key
       - run: nix copy --to '${{ env.CACHE_BUCKET }}'
