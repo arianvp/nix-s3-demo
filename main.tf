@@ -2,7 +2,14 @@ resource "aws_s3_bucket" "cache" {
   bucket_prefix = "cache"
 }
 
+# NOTE: If you don't have this  provider set up yet  uncomment the following lines
+# resource "aws_iam_openid_connect_provider" "github" {
+#   url            = "https://token.actions.githubusercontent.com"
+#   client_id_list = ["sts.amazonaws.com"]
+# }
+
 data "aws_iam_openid_connect_provider" "github" {
+  # depends_on = [aws_iam_openid_connect_provider.github]
   url = "https://token.actions.githubusercontent.com"
 }
 
@@ -66,4 +73,24 @@ resource "aws_iam_role" "write_cache" {
     name   = "write-cache"
     policy = data.aws_iam_policy_document.write_cache.json
   }
+}
+
+output "read_cache_role_arn" {
+  value = aws_iam_role.read_cache.arn
+}
+
+output "write_cache_role_arn" {
+  value = aws_iam_role.write_cache.arn
+}
+
+output "cache_bucket_arn" {
+  value = aws_s3_bucket.cache.arn
+}
+
+output "cache_bucket" {
+  value = aws_s3_bucket.cache.bucket
+}
+
+output "cache_bucket_region" {
+  value = aws_s3_bucket.cache.region
 }

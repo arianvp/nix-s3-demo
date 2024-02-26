@@ -10,12 +10,12 @@ jobs:
       contents: read
       id-token: write
     env:
-      S3_BUCKET: "s3://cache20240224120542829900000001?region=eu-central-1"
+      CACHE_BUCKET: "s3://${{ vars.CACHE_BUCKET }}?region=${{ vars.CACHE_BUCKET_REGION }}"
     steps:
       - uses: actions/checkout@v4
-      - run: echo "$NIX_PRIVATE_KEY" > /tmp/nix-secret-key
+      - run: echo "$NIX_SECRET_KEY" > /tmp/nix-secret-key
         env:
-          NIX_PRIVATE_KEY: ${{ secrets.NIX_PRIVATE_KEY }}
+          NIX_SECRET_KEY: ${{ secrets.NIX_SECRET_KEY }}
       - uses: DeterminateSystems/nix-installer-action@main
       - name: Set up AWS Credentials for current user
         uses: arianvp/configure-aws-action@main
@@ -31,6 +31,6 @@ jobs:
           user: root
       - run: nix run nixpkgs#awscli2 sts get-caller-identity
       - run: sudo -i nix run nixpkgs#awscli2 sts get-caller-identity
-      - run: nix build --extra-trusted-public-keys ${{ secrets.NIX_PUBLIC_KEY }} --extra-substituters '${{ env.S3_BUCKET }}'
+      - run: nix build --extra-trusted-public-keys '${{ secrets.NIX_PUBLIC_KEY }}' --extra-substituters '${{ vars.CACHE_BUCKET_ARN }}'
       - run: nix sign --key-file  /tmp/nix-secret-key
       - run: nix copy --to '${{ env.S3_BUCKET }}'
