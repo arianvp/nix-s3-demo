@@ -18,12 +18,12 @@ jobs:
           NIX_SECRET_KEY: ${{ secrets.NIX_SECRET_KEY }}
       - uses: DeterminateSystems/nix-installer-action@main
       - name: Set up AWS Credentials for current user
-        uses: arianvp/configure-aws-action@main
+        uses: arianvp/configure-aws-action@debug
         with:
           role-arn: ${{ vars.WRITE_CACHE_ROLE_ARN }}
           region: eu-central-1
       - name: Set up AWS credentials for nix-daemon 
-        uses: arianvp/configure-aws-action@main
+        uses: arianvp/configure-aws-action@debug
         with:
           role-arn: ${{ vars.READ_CACHE_ROLE_ARN }}
           region: eu-central-1
