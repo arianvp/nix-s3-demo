@@ -29,6 +29,6 @@ jobs:
           region: eu-central-1
           role-session-name: GithubActionsNixDaemon
           user: root
-      - run: nix build -vvvv --extra-trusted-public-keys '${{ secrets.NIX_PUBLIC_KEY }}' --extra-substituters '${{ env.CACHE_BUCKET }}'
+      - run: nix build  --extra-trusted-public-keys '${{ secrets.NIX_PUBLIC_KEY }}' --extra-substituters '${{ env.CACHE_BUCKET }}'
       - run: nix store sign --key-file  /tmp/nix-secret-key
-      - run: nix copy -vvvv --to '${{ env.CACHE_BUCKET }}'
+      - run: nix copy --to '${{ env.CACHE_BUCKET }}'
